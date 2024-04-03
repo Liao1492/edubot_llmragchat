@@ -1,0 +1,15 @@
+.git
+.pytest_cache
+.editorconfig
+.gitattributes
+.github
+.gitignore
+.gitlab-ci.yml
+.idea
+.pre-commit-config.yaml
+.readthedocs.yml
+.travis.yml
+delphic/media/*
+venv
+docs
+frontend
