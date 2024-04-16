@@ -9,7 +9,7 @@
 .pre-commit-config.yaml
 .readthedocs.yml
 .travis.yml
-delphic/media/*
+edubot/media/*
 venv
 docs
 frontend

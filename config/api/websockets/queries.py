@@ -28,7 +28,6 @@ class CollectionQueryConsumer(AsyncWebsocketConsumer):
         self.model = query_params.get('model', [None])[0] 
         print(f"Model: {self.model}")
         openai.models=self.model
-
         print("Connecting...")  # Debugging print statement
         try:
             self.collection_id = extract_connection_id(self.scope["path"])
@@ -64,9 +63,10 @@ class CollectionQueryConsumer(AsyncWebsocketConsumer):
         if self.index is not None:
             query_str = text_data_json["query"]
             enhanced = text_data_json.get("enhanced", False)
+            top_k = text_data_json.get("top_k", 20)
+
             modified_query_str = f"""
             Please return a nicely formatted markdown string to this request:
-
             {query_str}
             """
 
@@ -74,7 +74,7 @@ class CollectionQueryConsumer(AsyncWebsocketConsumer):
                 try:
                     p = QueryPipeline(verbose=True)
                     print("After querypipeline")
-                    retriever = self.index.as_retriever(similarity_top_k=20)
+                    retriever = self.index.as_retriever(similarity_top_k=top_k)
                     summarizer = TreeSummarize(llm=self.llm)
 
                     p.add_modules(
@@ -92,7 +92,7 @@ class CollectionQueryConsumer(AsyncWebsocketConsumer):
                     p.add_link("input", "retriever")
                     p.add_link("input", "summarizer", dest_key="query_str")
                     p.add_link("retriever", "summarizer", dest_key="nodes")
-                    print("Enhanced Query")
+                    print(f"Enhanced Query with {top_k}")
                     # response = self.query_engine.query(modified_query_str)
                     # print(f"Response : {response}")
                     # response = self.index.query(modified_query_str)

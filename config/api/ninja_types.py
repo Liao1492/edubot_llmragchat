@@ -1,4 +1,5 @@
 from ninja import Schema
+from uuid import UUID
 
 
 class CollectionStatusEnum(str):
@@ -15,6 +16,7 @@ class CollectionIn(Schema):
 
 class CollectionModelSchema(Schema):
     id: int
+    uuid: UUID
     title: str
     db_storage: str
     description: str

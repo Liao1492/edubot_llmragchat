@@ -331,10 +331,10 @@ chat_all_the_docs/media/
 
 .pytest_cache/
 .ipython/
-.envs/.local
-.envs/.production
-!.envs/.local/
-delphic/media/*
+# .envs/.local
+# .envs/.production
+# !.envs/.local/
+edubot/media/*
 
 ### Models for Question Answering
 cache/*

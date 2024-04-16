@@ -26,9 +26,8 @@ from django.urls import re_path  # noqa: E402
 from config.api.websockets.queries import CollectionQueryConsumer  # noqa: E402
 
 # This allows easy placement of apps within the interior
-# delphic directory.
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
-sys.path.append(str(BASE_DIR / "delphic"))
+sys.path.append(str(BASE_DIR / "edubot"))
 
 # If DJANGO_SETTINGS_MODULE is unset, default to the local settings
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.local")

@@ -3,13 +3,14 @@ from django.conf import settings
 from django.core.files.base import ContentFile
 from django.http import HttpRequest
 from ninja import File, Form, Router
+import copy
 from ninja.files import UploadedFile
 from ninja_extra import NinjaExtraAPI
+from edubot.utils.collections import is_pure_zip_file 
 from ninja_jwt.controller import NinjaJWTDefaultController
 import zipfile
 from edubot.indexes.models import Collection, Document
 from edubot.tasks import create_index,load_index
-from edubot.utils.collections import query_collection
 import os
 from .auth.api_key import NinjaApiKeyAuth
 from .ninja_types import (
@@ -69,12 +70,22 @@ async def create_collection(
         description=description,
         status=CollectionStatusEnum.QUEUED,
     )
-    print("Created collection:")
+    print(collection_instance.uuid)
 
+    print("Created collection:")
+    # print(f"is zip file: {is_pure_zip_file(files[0])}")
+
+    
     print(collection_instance)
 
     await sync_to_async(collection_instance.save)()
-    if(zipfile.is_zipfile(files[0])):
+    # splitted_file_name = os.path.split(files[0].filename)
+    # print(splitted_file_name[1])
+    # if 
+    #     print("ZIP FILE")
+    # uploaded_files =copy.deepcopy(files)
+  
+    if 'zip' in files[0].name:
         with zipfile.ZipFile(files[0], 'r') as zipf:
             # Extract all files first
             zipf.extractall()
@@ -106,12 +117,12 @@ async def create_collection(
             doc_file = ContentFile(doc_data, uploaded_file.name)
             document = Document(collection=collection_instance, file=doc_file)
             await sync_to_async(document.save)()
-
     create_index.si(collection_instance.id).apply_async()
 
     # result = await sync_to_async(CollectionModelSchema.from_orm)(collection_instance)
     return await sync_to_async(CollectionModelSchema)(
         id=collection_instance.id,
+        uuid=collection_instance.uuid,
         db_storage=collection_instance.db_storage,
         title=collection_instance.title,
         description=collection_instance.description,
@@ -128,17 +139,6 @@ async def create_collection(
         # Fetch document names directly
     )
 
-
-@collections_router.post(
-    "/query",
-    response=CollectionQueryOutput,
-    summary="Ask a question of a document collection",
-)
-def query_collection_view(request: HttpRequest, query_input: CollectionQueryInput):
-    collection_id = query_input.collection_id
-    query_str = query_input.query_str
-    response = query_collection(collection_id, query_str)
-    return {"response": response}
 
 
 @collections_router.get(
@@ -159,6 +159,7 @@ async def get_my_collections_view(request: HttpRequest):
     return [
         {
             "id": collection.id,
+            "uuid": collection.uuid,
             "title": collection.title,
             "db_storage": collection.db_storage,
             "description": collection.description,
@@ -197,6 +198,8 @@ async def get_collection_by_id(request, collection_id: int):
     
     return {
         "id": collection.id,
+        "uuid": collection.uuid,
+
         "title": collection.title,
         "db_storage": collection.db_storage,
         "description": collection.description,

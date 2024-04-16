@@ -19,7 +19,7 @@ import chromadb
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
 from llama_index.vector_stores.chroma import ChromaVectorStore
 from llama_index.core import StorageContext
-
+from llama_index.core import Settings
 
 from config import celery_app
 from edubot.indexes.models import Collection, CollectionStatus
@@ -58,7 +58,6 @@ def create_index(collection_id):
 
         collection.save()
 
-
         try:
             # Create a temporary directory to store the document files
             with tempfile.TemporaryDirectory() as tempdir:
@@ -72,7 +71,6 @@ def create_index(collection_id):
 
                     with document.file.open("rb") as f:
                         file_data = f.read()
-
                     temp_file_path = tempdir_path / document.file.name
                     temp_file_path.parent.mkdir(parents=True, exist_ok=True)
                     logger.error(f"Temp File Path: {temp_file_path}")
@@ -88,7 +86,7 @@ def create_index(collection_id):
                 # )
 
                 storage_choice = collection.db_storage
-                storage_context = get_storage_context(storage_choice, collection.title)
+                storage_context = get_storage_context(storage_choice, collection.uuid)
                 # db = chromadb.PersistentClient(path="./chroma_db")
                 # chroma_collection = db.get_or_create_collection(collection.title)
                 # assign chroma as the vector_store to the context
@@ -96,7 +94,7 @@ def create_index(collection_id):
                 # storage_context = StorageContext.from_defaults(vector_store=vector_store)
                 path_docs = "{}/{}/".format(tempdir, 'documents');
                 logger.error(f"Path Docs: {path_docs}")
-                documents = SimpleDirectoryReader(path_docs,filename_as_id=True).load_data()
+                documents = SimpleDirectoryReader(path_docs).load_data()
                 index = VectorStoreIndex.from_documents(
                     documents, storage_context=storage_context
                 )
@@ -167,15 +165,15 @@ def load_index(collection_id, document_created):
             logger.error(f"Temp File Path: {temp_file_path}")
             with temp_file_path.open("wb") as f:
                 f.write(file_data)
-
             storage_choice = collection.db_storage
-            storage_context = get_storage_context(storage_choice, collection.title)
+            storage_context = get_storage_context(storage_choice, collection.uuid)
             # db = chromadb.PersistentClient(path="./chroma_db")
             # chroma_collection = db.get_or_create_collection(collection.title)
             # assign chroma as the vector_store to the context
             # vector_store = ChromaVectorStore(chroma_collection=chroma_collection)
             # storage_context = StorageContext.from_defaults(vector_store=vector_store)
             path_docs = "{}/{}/".format(tempdir, 'documents');
+
             logger.error(f"Path Docs: {path_docs}")
             documents = SimpleDirectoryReader(path_docs).load_data()
             index = VectorStoreIndex.from_documents(

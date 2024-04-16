@@ -8,8 +8,7 @@ import environ
 
 BASE_DIR = Path(__file__).resolve(strict=True).parent.parent.parent
 
-# delphic/
-APPS_DIR = BASE_DIR / "delphic"
+APPS_DIR = BASE_DIR / "edubot"
 env = environ.Env()
 
 READ_DOT_ENV_FILE = env.bool("DJANGO_READ_DOT_ENV_FILE", default=False)
@@ -76,8 +75,8 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
-    "delphic.indexes",
-    "delphic.users",
+    "edubot.indexes",
+    "edubot.users",
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -85,7 +84,7 @@ INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 # MIGRATIONS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#migration-modules
-MIGRATION_MODULES = {"sites": "delphic.contrib.sites.migrations"}
+MIGRATION_MODULES = {"sites": "edubot.contrib.sites.migrations"}
 
 # AUTHENTICATION
 # ------------------------------------------------------------------------------
@@ -200,11 +199,11 @@ else:
 
     # STATIC
     # ------------------------
-    STATICFILES_STORAGE = "delphic.utils.storages.StaticRootS3Boto3Storage"
+    STATICFILES_STORAGE = "edubot.utils.storages.StaticRootS3Boto3Storage"
     STATIC_URL = f"https://{aws_s3_domain}/static/"
     # MEDIA
     # ------------------------------------------------------------------------------
-    DEFAULT_FILE_STORAGE = "delphic.utils.storages.MediaRootS3Boto3Storage"
+    DEFAULT_FILE_STORAGE = "edubot.utils.storages.MediaRootS3Boto3Storage"
     MEDIA_URL = f"https://{aws_s3_domain}/media/"
     MEDIA_ROOT = str(APPS_DIR / "media")
 
@@ -349,13 +348,13 @@ ACCOUNT_EMAIL_REQUIRED = True
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-ACCOUNT_ADAPTER = "delphic.users.adapters.AccountAdapter"
+ACCOUNT_ADAPTER = "edubot.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-ACCOUNT_FORMS = {"signup": "delphic.users.forms.UserSignupForm"}
+ACCOUNT_FORMS = {"signup": "edubot.users.forms.UserSignupForm"}
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
-SOCIALACCOUNT_ADAPTER = "delphic.users.adapters.SocialAccountAdapter"
+SOCIALACCOUNT_ADAPTER = "edubot.users.adapters.SocialAccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/forms.html
-SOCIALACCOUNT_FORMS = {"signup": "delphic.users.forms.UserSocialSignupForm"}
+SOCIALACCOUNT_FORMS = {"signup": "edubot.users.forms.UserSocialSignupForm"}
 
 # API Configuration
 # ------------------------------------------------------------------------------

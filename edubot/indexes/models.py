@@ -24,15 +24,8 @@ class Document(models.Model):
 
 
 class Collection(models.Model):
-    # Want to tie the jobs to the source api key
-    # id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    # id = models.BigAutoField(primary_key=True, unique=True)
-# 
-    # id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
-
-    # id = models.UUIDField(default=uuid.uuid4, primary_key=True)
-    # api_key = models.ForeignKey(APIKey, blank=True, null=True, on_delete=models.CASCADE)
     db_storage=models.CharField(max_length=255)
+    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     title = models.CharField(max_length=255)
     description = models.TextField()
     status = models.CharField(max_length=20, choices=CollectionStatus.choices)

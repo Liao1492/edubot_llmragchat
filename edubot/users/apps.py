@@ -3,11 +3,11 @@ from django.utils.translation import gettext_lazy as _
 
 
 class UsersConfig(AppConfig):
-    name = "delphic.users"
+    name = "edubot.users"
     verbose_name = _("Users")
 
     def ready(self):
         try:
-            import delphic.users.signals  # noqa: F401
+            import edubot.users.signals  # noqa: F401
         except ImportError:
             pass

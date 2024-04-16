@@ -11,13 +11,14 @@ class DocumentInline(admin.StackedInline):
 
 
 class CollectionAdmin(admin.ModelAdmin):
-    list_display = ("id","db_storage", "title", "description", "status", "created", "modified")
+    list_display = ("id","db_storage","uuid", "title", "description", "status", "created", "modified")
     list_filter = ("status",)
     search_fields = ("title", "description")
     fields = (
         # "api_key",
         # "uuid", # added "uuid
         "db_storage",
+        "uuid",
         "title",
         "description",
         "status",
