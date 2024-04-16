@@ -40,3 +40,6 @@ sudo docker-compose -f local.yml run django python manage.py createsuperuser
 
 2. You will be prompted to provide a username, email address, and password for the superuser. Enter the required information.
 
+# Demo Usage
+
+![](https://github.com/Liao1492/fyp_2024/blob/main/assets/giffinale.gif)
