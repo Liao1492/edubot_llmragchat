@@ -1,3 +1,6 @@
 [submodule "frontend"]
 	path = frontend
 	url = https://github.com/Liao1492/frontend_edubot.git
+[submodule "chroma"]
+	path = chroma
+	url = https://github.com/chroma-core/chroma.git
